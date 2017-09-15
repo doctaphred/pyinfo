@@ -54,6 +54,17 @@ virtualenv Python:
     🐍 2.7.12
 
 
+pyenv Python:
+
+    $ pyinfo
+    🐍 3.6.2 (pyenv)
+
+    $ pyenv local 2.7.12
+
+    $ pyinfo
+    🐍 2.7.12 (pyenv)
+
+
 direnv Python:
 
     ~/dev$ pyinfo --brew --short
@@ -124,11 +135,17 @@ def short_name(executable_path):
         custom-venv:
             /Users/me/dev/project/custom-venv/bin/python
 
+        pyenv:
+            /Users/me/.pyenv/versions/3.6.2/bin/python
+
         direnv-project:
             /Users/me/dev/direnv-project/.direnv/python-3.5.2/bin/python
     """
+    # TODO: do this better, maybe with regexes
     path = dirname(dirname(executable_path))
     name = basename(path)
+    if basename(dirname(dirname(path))) == '.pyenv':
+        return 'pyenv'
     if name == 'venv' or name == 'virtualenv' or name.startswith('python'):
         # Move up a level
         path = dirname(path)
